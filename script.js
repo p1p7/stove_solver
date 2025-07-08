@@ -6,7 +6,7 @@ let solution = null;
 let editMode = false;
 
 // DOM Elements
-const gameGridEl = document.getElementById('gameGrid');
+const gameGridEl = document.querySelector('.stove-top');
 const buttonGridEl = document.getElementById('buttonGrid');
 const moveHistoryDisplayEl = document.getElementById('moveHistoryDisplay');
 const solutionDisplayEl = document.getElementById('solutionDisplay');
@@ -147,23 +147,23 @@ const applyButton = (currentLights, buttonNum) => {
 const stateToString = (state) => state.join(',');
 
 /**
- * Renders the current state of the lights onto the game grid.
+ * Renders the current state of the burners onto the stove-top grid.
  */
 const renderLights = () => {
     gameGridEl.innerHTML = ''; // Clear existing lights
     lights.forEach((state, index) => {
         const lightDiv = document.createElement('div');
-        lightDiv.classList.add('light');
+        lightDiv.classList.add('burner');
         lightDiv.setAttribute('data-state', state); // Use data-state for CSS
         lightDiv.textContent = state;
         lightDiv.addEventListener('click', () => clickLight(index));
 
         if (editMode) {
             lightDiv.classList.add('edit-mode');
-            lightDiv.title = `Click to change state (currently ${state})`;
+            lightDiv.title = `Click to change heat level (currently ${state})`;
         } else {
             lightDiv.classList.remove('edit-mode');
-            lightDiv.title = `Light ${index + 1}: State ${state}`;
+            lightDiv.title = `Burner ${index + 1}: Heat Level ${state}`;
         }
         gameGridEl.appendChild(lightDiv);
     });
@@ -177,18 +177,27 @@ const renderLights = () => {
 };
 
 /**
- * Renders the control buttons.
+ * Renders the control knobs with the new layout (1-5 in first row, 6-9 in second).
  */
 const renderButtons = () => {
     buttonGridEl.innerHTML = '';
-    for (let i = 1; i <= 9; i++) {
-        const button = document.createElement('button');
-        button.classList.add('control-button');
-        button.textContent = i;
-        button.addEventListener('click', () => pressButton(i));
-        button.disabled = editMode; // Disable if in edit mode
-        buttonGridEl.appendChild(button);
-    }
+
+    const createButtonRow = (start, end) => {
+        const rowDiv = document.createElement('div');
+        rowDiv.classList.add('knob-row');
+        for (let i = start; i <= end; i++) {
+            const button = document.createElement('button');
+            button.classList.add('control-knob');
+            button.textContent = i;
+            button.addEventListener('click', () => pressButton(i));
+            button.disabled = editMode; // Disable if in edit mode
+            rowDiv.appendChild(button);
+        }
+        return rowDiv;
+    };
+
+    buttonGridEl.appendChild(createButtonRow(1, 5)); // First row: knobs 1-5
+    buttonGridEl.appendChild(createButtonRow(6, 9)); // Second row: knobs 6-9
 
     if (editMode) {
         buttonDisabledMessageEl.classList.remove('hidden');
@@ -215,7 +224,7 @@ const renderMoveHistory = () => {
     } else {
         const p = document.createElement('p');
         p.classList.add('italic');
-        p.textContent = 'No moves yet';
+        p.textContent = 'No steps taken yet';
         moveHistoryDisplayEl.appendChild(p);
     }
 };
@@ -236,13 +245,13 @@ const updateUI = () => {
     } else {
         editModeMessageEl.classList.add('hidden');
         toggleEditModeBtn.classList.remove('active');
-        toggleEditModeBtn.textContent = 'Edit Board';
+        toggleEditModeBtn.textContent = 'Enter Edit Mode';
     }
 
     // Update solve button state
     const allZeros = lights.every(light => light === 0);
     solveBtn.disabled = solving || allZeros || editMode;
-    solveBtn.textContent = solving ? 'Solving...' : 'Solve';
+    solveBtn.textContent = solving ? 'Finding Solution...' : 'Find Solution';
 
     // Update solution display
     if (solution !== null) {
@@ -256,12 +265,12 @@ const updateUI = () => {
             solutionMovesEl.innerHTML = '';
             solution.forEach(move => {
                 const span = document.createElement('span');
-                span.classList.add('solution-tag'); // Use a specific class for solution tags if desired, otherwise 'move-tag'
+                span.classList.add('solution-tag');
                 span.textContent = move;
                 solutionMovesEl.appendChild(span);
             });
             applySolutionBtn.classList.remove('hidden');
-            applySolutionBtn.disabled = solving; // Prevent applying while solving (though solver should finish first)
+            applySolutionBtn.disabled = solving;
         }
     } else {
         solutionDisplayEl.classList.add('hidden');
@@ -310,13 +319,7 @@ const toggleEditMode = () => {
     updateUI();
 };
 
-const setPresetPattern = (patternString) => {
-    lights = patternString.split(',').map(Number);
-    moveHistory = [];
-    solution = null;
-    editMode = false;
-    updateUI();
-};
+// Removed setPresetPattern function
 
 const solvePuzzle = () => {
     solving = true;
@@ -369,9 +372,9 @@ const solvePuzzle = () => {
         if (foundSolution) {
             solution = foundSolution;
         } else if (statesExplored >= maxStates) {
-            solution = `Search limit reached (${maxStates} states explored) - try a different puzzle or it may require >${maxDepth} moves`;
+            solution = `Solution search limit reached (${maxStates} states explored) - try a different meal or it may require >${maxDepth} steps`;
         } else {
-            solution = `No solution found within ${maxDepth} moves.`;
+            solution = `No solution found within ${maxDepth} steps.`;
         }
 
         solving = false;
@@ -390,8 +393,8 @@ const applySolution = async () => {
     // Disable buttons during animation
     applySolutionBtn.disabled = true;
     solveBtn.disabled = true;
-    document.querySelectorAll('.control-button').forEach(btn => btn.disabled = true);
-    document.querySelectorAll('.preset-buttons button').forEach(btn => btn.disabled = true);
+    document.querySelectorAll('.control-knob').forEach(btn => btn.disabled = true);
+    // Removed disabling preset buttons as they are no longer in HTML
     randomizeBtn.disabled = true;
     resetBtn.disabled = true;
     toggleEditModeBtn.disabled = true;
@@ -408,8 +411,8 @@ const applySolution = async () => {
     // Re-enable buttons after animation
     applySolutionBtn.disabled = false;
     solveBtn.disabled = false;
-    document.querySelectorAll('.control-button').forEach(btn => btn.disabled = false);
-    document.querySelectorAll('.preset-buttons button').forEach(btn => btn.disabled = false);
+    document.querySelectorAll('.control-knob').forEach(btn => btn.disabled = false);
+    // Removed re-enabling preset buttons
     randomizeBtn.disabled = false;
     resetBtn.disabled = false;
     toggleEditModeBtn.disabled = false;
@@ -430,11 +433,5 @@ document.addEventListener('DOMContentLoaded', () => {
     solveBtn.addEventListener('click', solvePuzzle);
     applySolutionBtn.addEventListener('click', applySolution);
 
-    // Preset patterns
-    document.querySelectorAll('.preset-buttons button').forEach(button => {
-        button.addEventListener('click', (event) => {
-            const pattern = event.target.dataset.pattern;
-            setPresetPattern(pattern);
-        });
-    });
+    // Removed preset pattern event listeners
 });

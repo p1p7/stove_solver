@@ -3,75 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>6-State Lights Out Simulator</title>
+    <title>Stove Puzzle Solver</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>6-State Lights Out Simulator</h1>
+        <h1>🍳 Stove Puzzle Solver 🔥</h1>
 
-        <div id="victoryMessage" class="hidden">
-            <p>🎉 All lights are at state 0! Victory! 🎉</p>
+        <div id="victoryMessage" class="hidden message success">
+            <p>🎉 All burners are off! Dinner is served! 🎉</p>
         </div>
 
-        <div class="game-grid" id="gameGrid">
-            </div>
+        <div class="game-area">
+            <div class="stove-top">
+                </div>
+        </div>
 
-        <p id="editModeMessage" class="edit-mode-message hidden">
-            🎨 Edit Mode: Click any light to cycle through states 0-5
+        <p id="editModeMessage" class="edit-mode-message hidden message info">
+            🎨 Edit Mode: Click any burner to adjust its heat level (0-5)
         </p>
 
         <div class="controls">
-            <h2>Press Buttons:</h2>
-            <div class="button-grid" id="buttonGrid">
+            <h2>Adjust Knobs:</h2>
+            <div class="knob-panel" id="buttonGrid">
                 </div>
-            <p id="buttonDisabledMessage" class="button-disabled-message hidden">
-                Buttons disabled in edit mode
+            <p id="buttonDisabledMessage" class="button-disabled-message hidden message warning">
+                Knobs are locked in Edit Mode!
             </p>
         </div>
 
         <div class="action-buttons">
-            <button id="resetBtn">Reset to All 0s</button>
-            <button id="randomizeBtn">Randomize</button>
-            <button id="toggleEditModeBtn">Edit Board</button>
-            <button id="solveBtn">Solve</button>
+            <button id="resetBtn">Reset All Burners</button>
+            <button id="randomizeBtn">Randomize Heat</button>
+            <button id="toggleEditModeBtn">Enter Edit Mode</button>
+            <button id="solveBtn">Find Solution</button>
         </div>
 
-        <div class="preset-patterns">
-            <h2>Preset Patterns:</h2>
-            <div class="preset-buttons">
-                <button data-pattern="5,5,5,5,5,5,5,5,5">All 5s</button>
-                <button data-pattern="3,3,3,3,3,3,3,3,3">All 3s</button>
-                <button data-pattern="1,0,1,0,1,0,1,0,1">Checkerboard</button>
-                <button data-pattern="0,1,0,1,5,1,0,1,0">Cross</button>
-                <button data-pattern="2,2,2,2,0,2,2,2,2">Ring</button>
-                <button data-pattern="5,0,5,0,0,0,5,0,5">Corners</button>
-            </div>
-        </div>
-
-        <div id="solutionDisplay" class="solution-display hidden">
-            <h3>Solution:</h3>
+        <div id="solutionDisplay" class="solution-display hidden message info">
+            <h3>Secret Solution:</h3>
             <p id="solutionText"></p>
             <div id="solutionMoves" class="solution-moves"></div>
-            <button id="applySolutionBtn" class="hidden">Apply Solution (with animation)</button>
+            <button id="applySolutionBtn" class="hidden">Animate all steps besides last (buggy)</button>
         </div>
 
         <div class="move-history">
-            <h2>Move History:</h2>
+            <h2>Cooking Steps:</h2>
             <div id="moveHistoryDisplay" class="move-history-display">
-                <p class="italic">No moves yet</p>
+                <p class="italic">No steps taken yet</p>
             </div>
         </div>
 
         <div class="legend">
-            <h3>How to Play:</h3>
+            <h3>How to Play the Stove Puzzle:</h3>
             <ul>
-                <li>Each light can be in states 0-5 (shown as numbers, darker = lower state)</li>
-                <li>Each button affects specific lights according to complex lookup tables</li>
-                <li>Goal: Get all lights to state 0</li>
-                <li>Button effects are non-linear - the same button can have different effects depending on current light states</li>
-                <li><strong>Edit Mode:</strong> Click "Edit Board" to manually set light states by clicking on them</li>
-                <li><strong>Presets:</strong> Use preset patterns for interesting starting configurations</li>
+                <li>Each burner can be at heat levels 0-5 (0 = off, 5 = max heat).</li>
+                <li>Each knob adjusts specific burners in complex ways.</li>
+                <li>Goal: Get all burners to heat level 0 (off).</li>
+                <li>Knob effects are non-linear; the same knob might have a different effect depending on the current burner's heat.</li>
+                <li>Edit Mode: Click "Enter Edit Mode" to manually set burner heat levels by clicking on them.</li>
+                <li>chad gpt</li>
             </ul>
         </div>
     </div>
