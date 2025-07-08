@@ -2,7 +2,7 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 20px;
-    background-color: #d2b48c; /* Light oakwood color */
+    background-color: #d2b48c;
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -143,14 +143,13 @@ h3 {
 
 .knob-row {
     display: flex;
-    justify-content: center; /* Center the knobs in the row */
+    justify-content: center;
     gap: 10px;
 }
 
 .control-knob {
-    /* Use a fixed width or flex-basis to ensure equal sizing */
-    flex-basis: 90px; /* Adjust as needed to make them look good */
-    height: 60px; /* Consistent height */
+    flex-basis: 90px;
+    height: 60px;
     font-weight: bold;
     padding: 15px 20px;
     border-radius: 10px;
@@ -161,7 +160,7 @@ h3 {
     background-color: #5b6f8f;
     color: #fff;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-    display: flex; /* Ensure content is centered if padding changes */
+    display: flex;
     align-items: center;
     justify-content: center;
 }
@@ -188,10 +187,15 @@ h3 {
 .action-buttons {
     margin-bottom: 25px;
     text-align: center;
+    display: flex; /* Make it a flex container to center the row */
+    justify-content: center; /* Center the action-row */
+}
+
+.action-row {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
     justify-content: center;
-    gap: 15px;
+    gap: 15px; /* space between buttons */
 }
 
 .action-buttons button {
@@ -212,12 +216,6 @@ h3 {
 }
 #resetBtn:hover { background-color: #c82333; transform: translateY(-2px); }
 
-#randomizeBtn {
-    background-color: #ffc107;
-    color: #333;
-}
-#randomizeBtn:hover { background-color: #e0a800; transform: translateY(-2px); }
-
 #toggleEditModeBtn {
     background-color: #17a2b8;
     color: #fff;
@@ -235,41 +233,19 @@ h3 {
 
 /* Vibrant Green for Find Solution */
 #solveBtn {
-    background-color: #36e600; /* More vibrant green */
-    color: #333;
+    background-color: #00e676;
+    color: #fff;
 }
-#solveBtn:hover { background-color: #2fc800; transform: translateY(-2px); }
+#solveBtn:hover { background-color: #00c853; transform: translateY(-2px); }
 #solveBtn:disabled {
     background-color: #a7d9b3;
     cursor: not-allowed;
     box-shadow: none;
 }
 
-/* Preset Patterns (removed from HTML, but keep styles if needed elsewhere or modify) */
-.preset-patterns {
-    display: none; /* Hide the entire section */
-}
-
-.preset-buttons button {
-    background-color: #6f42c1;
-    color: #fff;
-    font-weight: bold;
-    padding: 10px 15px;
-    border-radius: 8px;
-    transition: background-color 0.2s, transform 0.1s ease-out;
-    border: none;
-    cursor: pointer;
-    font-size: 0.9rem;
-    white-space: nowrap;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.preset-buttons button:hover {
-    background-color: #5e37a0; transform: translateY(-2px);
-}
-
 /* Solution Display */
 .solution-display {
+    position: relative; /* For positioning the close button */
     margin-bottom: 25px;
     padding: 20px;
     background-color: #f0f8ff;
@@ -320,6 +296,27 @@ h3 {
 #applySolutionBtn:hover {
     background-color: #0056b3; transform: translateY(-2px);
 }
+
+/* Close button for solution display */
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #666;
+    cursor: pointer;
+    padding: 5px;
+    line-height: 1; /* To ensure 'X' is vertically centered */
+    transition: color 0.2s;
+}
+
+.close-button:hover {
+    color: #333;
+}
+
 
 /* Move History */
 .move-history {

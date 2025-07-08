@@ -1,11 +1,9 @@
-// Global State
 let lights = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 let moveHistory = [];
 let solving = false;
 let solution = null;
 let editMode = false;
 
-// DOM Elements
 const gameGridEl = document.querySelector('.stove-top');
 const buttonGridEl = document.getElementById('buttonGrid');
 const moveHistoryDisplayEl = document.getElementById('moveHistoryDisplay');
@@ -18,11 +16,10 @@ const editModeMessageEl = document.getElementById('editModeMessage');
 const buttonDisabledMessageEl = document.getElementById('buttonDisabledMessage');
 
 const resetBtn = document.getElementById('resetBtn');
-const randomizeBtn = document.getElementById('randomizeBtn');
 const toggleEditModeBtn = document.getElementById('toggleEditModeBtn');
 const solveBtn = document.getElementById('solveBtn');
+const closeSolutionBtn = document.getElementById('closeSolutionBtn');
 
-// Lookup tables for each button (Copied directly from your React code)
 const lookupTables = {
     1: {
         2: {1:0, 0:5, 5:3, 3:2, 2:4, 4:1},
@@ -102,7 +99,6 @@ const lookupTables = {
     }
 };
 
-// Button affects mapping (Copied directly from your React code)
 const buttonAffects = {
     1: [2, 3, 5, 6, 7],
     2: [1, 2, 4, 5, 6, 9],
@@ -115,7 +111,6 @@ const buttonAffects = {
     9: [1, 2, 3, 6, 7, 9]
 };
 
-// --- Helper Functions ---
 
 /**
  * Applies the effect of a button press to a given light state.
@@ -237,7 +232,6 @@ const updateUI = () => {
     renderButtons();
     renderMoveHistory();
 
-    // Update edit mode message visibility
     if (editMode) {
         editModeMessageEl.classList.remove('hidden');
         toggleEditModeBtn.classList.add('active');
@@ -248,17 +242,15 @@ const updateUI = () => {
         toggleEditModeBtn.textContent = 'Enter Edit Mode';
     }
 
-    // Update solve button state
     const allZeros = lights.every(light => light === 0);
     solveBtn.disabled = solving || allZeros || editMode;
     solveBtn.textContent = solving ? 'Finding Solution...' : 'Find Solution';
 
-    // Update solution display
     if (solution !== null) {
         solutionDisplayEl.classList.remove('hidden');
         if (typeof solution === 'string') {
             solutionTextEl.textContent = solution;
-            solutionMovesEl.innerHTML = ''; // Clear moves
+            solutionMovesEl.innerHTML = '';
             applySolutionBtn.classList.add('hidden');
         } else {
             solutionTextEl.textContent = '';
@@ -273,26 +265,25 @@ const updateUI = () => {
             applySolutionBtn.disabled = solving;
         }
     } else {
-        solutionDisplayEl.classList.add('hidden');
+
     }
 };
 
-// --- Game Logic Functions ---
 
 const pressButton = (buttonNum) => {
     if (editMode) return;
 
     lights = applyButton(lights, buttonNum);
     moveHistory.push(buttonNum);
-    solution = null; // Clear solution if manual move is made
     updateUI();
 };
 
 const clickLight = (index) => {
     if (editMode) {
         lights[index] = (lights[index] + 1) % 6;
-        moveHistory = []; // Reset history in edit mode
+        moveHistory = [];
         solution = null;
+        closeSolutionDisplay();
         updateUI();
     }
 };
@@ -302,6 +293,7 @@ const reset = () => {
     moveHistory = [];
     solution = null;
     editMode = false;
+    closeSolutionDisplay();
     updateUI();
 };
 
@@ -310,23 +302,29 @@ const randomize = () => {
     moveHistory = [];
     solution = null;
     editMode = false;
+    closeSolutionDisplay();
     updateUI();
 };
 
 const toggleEditMode = () => {
     editMode = !editMode;
-    solution = null; // Clear solution when toggling mode
+    solution = null;
+    closeSolutionDisplay();
     updateUI();
 };
 
-// Removed setPresetPattern function
+const closeSolutionDisplay = () => {
+    solution = null;
+    solutionDisplayEl.classList.add('hidden');
+    applySolutionBtn.disabled = false;
+};
+
 
 const solvePuzzle = () => {
     solving = true;
     solution = null;
-    updateUI(); // Update UI to show 'Solving...' and disable button
+    updateUI();
 
-    // Use setTimeout to allow UI to update before starting heavy computation
     setTimeout(() => {
         const targetState = [0, 0, 0, 0, 0, 0, 0, 0, 0];
         const targetString = stateToString(targetState);
@@ -351,14 +349,13 @@ const solvePuzzle = () => {
             const {state, moves} = queue.shift();
             statesExplored++;
 
-            // Try each button
             for (let button = 1; button <= 9; button++) {
                 const newState = applyButton(state, button);
                 const newStateString = stateToString(newState);
 
                 if (newStateString === targetString) {
                     foundSolution = [...moves, button];
-                    break; // Found solution, exit button loop
+                    break;
                 }
 
                 if (!visited.has(newStateString) && moves.length < maxDepth) {
@@ -368,34 +365,29 @@ const solvePuzzle = () => {
             }
         }
 
-        // Set solution based on findings
         if (foundSolution) {
             solution = foundSolution;
         } else if (statesExplored >= maxStates) {
-            solution = `Solution search limit reached (${maxStates} states explored) - try a different meal or it may require >${maxDepth} steps`;
+            solution = `Solution search limit reached (${maxStates} states explored) - it may require >${maxDepth} steps.`;
         } else {
             solution = `No solution found within ${maxDepth} steps.`;
         }
 
         solving = false;
-        updateUI(); // Update UI with solution or message
-    }, 10); // Small delay to allow UI refresh
+        updateUI();
+    }, 10);
 };
 
 
 const applySolution = async () => {
     if (!solution || typeof solution === 'string' || solving) return;
 
-    moveHistory = []; // Clear current history
-    lights = [0, 0, 0, 0, 0, 0, 0, 0, 0]; // Reset board visually before applying solution
+    moveHistory = [];
     updateUI();
 
-    // Disable buttons during animation
     applySolutionBtn.disabled = true;
     solveBtn.disabled = true;
     document.querySelectorAll('.control-knob').forEach(btn => btn.disabled = true);
-    // Removed disabling preset buttons as they are no longer in HTML
-    randomizeBtn.disabled = true;
     resetBtn.disabled = true;
     toggleEditModeBtn.disabled = true;
 
@@ -405,33 +397,26 @@ const applySolution = async () => {
         lights = applyButton(lights, buttonNum);
         moveHistory.push(buttonNum);
         updateUI();
-        await new Promise(resolve => setTimeout(resolve, 500)); // Wait 500ms
+        await new Promise(resolve => setTimeout(resolve, 500));
     }
 
-    // Re-enable buttons after animation
     applySolutionBtn.disabled = false;
     solveBtn.disabled = false;
     document.querySelectorAll('.control-knob').forEach(btn => btn.disabled = false);
-    // Removed re-enabling preset buttons
-    randomizeBtn.disabled = false;
     resetBtn.disabled = false;
     toggleEditModeBtn.disabled = false;
 
-    updateUI(); // Final UI update
+    updateUI();
 };
 
 
-// --- Event Listeners ---
 document.addEventListener('DOMContentLoaded', () => {
-    // Initial render
+
     updateUI();
 
-    // Action buttons
     resetBtn.addEventListener('click', reset);
-    randomizeBtn.addEventListener('click', randomize);
     toggleEditModeBtn.addEventListener('click', toggleEditMode);
     solveBtn.addEventListener('click', solvePuzzle);
     applySolutionBtn.addEventListener('click', applySolution);
-
-    // Removed preset pattern event listeners
+    closeSolutionBtn.addEventListener('click', closeSolutionDisplay);
 });

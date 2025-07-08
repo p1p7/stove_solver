@@ -33,17 +33,19 @@
         </div>
 
         <div class="action-buttons">
-            <button id="resetBtn">Reset All Burners</button>
-            <button id="randomizeBtn">Randomize Heat</button>
-            <button id="toggleEditModeBtn">Enter Edit Mode</button>
-            <button id="solveBtn">Find Solution</button>
+            <div class="action-row">
+                <button id="resetBtn">Reset All Burners</button>
+                <button id="toggleEditModeBtn">Enter Edit Mode</button>
+                <button id="solveBtn">Find Solution</button>
+            </div>
         </div>
 
         <div id="solutionDisplay" class="solution-display hidden message info">
+            <button id="closeSolutionBtn" class="close-button">X</button>
             <h3>Secret Solution:</h3>
             <p id="solutionText"></p>
             <div id="solutionMoves" class="solution-moves"></div>
-            <button id="applySolutionBtn" class="hidden">Animate all steps besides last (buggy)</button>
+            <button id="applySolutionBtn" class="hidden">Animate all steps</button>
         </div>
 
         <div class="move-history">
