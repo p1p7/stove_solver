@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6-State Lights Out Simulator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>6-State Lights Out Simulator</h1>
+
+        <div id="victoryMessage" class="hidden">
+            <p>🎉 All lights are at state 0! Victory! 🎉</p>
+        </div>
+
+        <div class="game-grid" id="gameGrid">
+            </div>
+
+        <p id="editModeMessage" class="edit-mode-message hidden">
+            🎨 Edit Mode: Click any light to cycle through states 0-5
+        </p>
+
+        <div class="controls">
+            <h2>Press Buttons:</h2>
+            <div class="button-grid" id="buttonGrid">
+                </div>
+            <p id="buttonDisabledMessage" class="button-disabled-message hidden">
+                Buttons disabled in edit mode
+            </p>
+        </div>
+
+        <div class="action-buttons">
+            <button id="resetBtn">Reset to All 0s</button>
+            <button id="randomizeBtn">Randomize</button>
+            <button id="toggleEditModeBtn">Edit Board</button>
+            <button id="solveBtn">Solve</button>
+        </div>
+
+        <div class="preset-patterns">
+            <h2>Preset Patterns:</h2>
+            <div class="preset-buttons">
+                <button data-pattern="5,5,5,5,5,5,5,5,5">All 5s</button>
+                <button data-pattern="3,3,3,3,3,3,3,3,3">All 3s</button>
+                <button data-pattern="1,0,1,0,1,0,1,0,1">Checkerboard</button>
+                <button data-pattern="0,1,0,1,5,1,0,1,0">Cross</button>
+                <button data-pattern="2,2,2,2,0,2,2,2,2">Ring</button>
+                <button data-pattern="5,0,5,0,0,0,5,0,5">Corners</button>
+            </div>
+        </div>
+
+        <div id="solutionDisplay" class="solution-display hidden">
+            <h3>Solution:</h3>
+            <p id="solutionText"></p>
+            <div id="solutionMoves" class="solution-moves"></div>
+            <button id="applySolutionBtn" class="hidden">Apply Solution (with animation)</button>
+        </div>
+
+        <div class="move-history">
+            <h2>Move History:</h2>
+            <div id="moveHistoryDisplay" class="move-history-display">
+                <p class="italic">No moves yet</p>
+            </div>
+        </div>
+
+        <div class="legend">
+            <h3>How to Play:</h3>
+            <ul>
+                <li>Each light can be in states 0-5 (shown as numbers, darker = lower state)</li>
+                <li>Each button affects specific lights according to complex lookup tables</li>
+                <li>Goal: Get all lights to state 0</li>
+                <li>Button effects are non-linear - the same button can have different effects depending on current light states</li>
+                <li><strong>Edit Mode:</strong> Click "Edit Board" to manually set light states by clicking on them</li>
+                <li><strong>Presets:</strong> Use preset patterns for interesting starting configurations</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
