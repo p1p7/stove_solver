@@ -340,7 +340,7 @@ const solvePuzzle = () => {
         const queue = [{state: lights, moves: []}];
         const visited = new Set([startString]);
         const maxStates = 5000000; // 5 million states limit
-        const maxDepth = 25; // Limit search depth
+        const maxDepth = 45;
         let statesExplored = 0;
 
         let foundSolution = null;
